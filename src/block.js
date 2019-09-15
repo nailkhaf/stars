@@ -42,6 +42,13 @@ class Block {
       // Comparing if the hashes changed
       // Returning the Block is not valid
       // Returning the Block is valid
+
+      // FIXME why hash property is part of the block???
+      const expectedHash = self.hash
+      self.hash = null
+      const actualHash = SHA256(JSON.stringify(self))
+      self.hash = expectedHash
+      resolve(expectedHash == actualHash)
     })
   }
 
@@ -59,6 +66,22 @@ class Block {
     // Decoding the data to retrieve the JSON representation of the object
     // Parse the data to an object to be retrieve.
     // Resolve with the data if the object isn't the Genesis block
+    const self = this
+    return new Promise((resolve, reject) => {
+      try {
+
+        // check Genesis block
+        if (self.previousBlockHash == null) {
+          throw new Error('Cant get data, block is genesis')
+        }
+
+        // decode data and parse to javascript object
+        const blockData = JSON.parse(hex2ascii(self.data))
+        resolve(blockData)
+      } catch(e) {
+        reject(e)
+      }
+    })
   }
 }
 
