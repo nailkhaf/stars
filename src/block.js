@@ -44,13 +44,14 @@ class Block {
       // Returning the Block is valid
 
       // FIXME why hash property is part of the block???
+      const expectedHash = self.hash
+      self.hash = null
       try {
-        const expectedHash = self.hash
-        self.hash = null
-        const actualHash = SHA256(JSON.stringify(self))
+        const actualHash = SHA256(JSON.stringify(self)).toString()
         self.hash = expectedHash
         resolve(expectedHash === actualHash)
-      } catch(e) {
+      } catch (e) {
+        self.hash = expectedHash
         reject(e)
       }
     })
@@ -73,16 +74,15 @@ class Block {
     const self = this
     return new Promise((resolve, reject) => {
       try {
-
         // check Genesis block
         if (self.previousBlockHash == null) {
-          throw new Error('Cant get data, block is genesis')
+          throw new Error(`Cant get data, block is genesis`)
         }
 
         // decode data and parse to javascript object
         const blockData = JSON.parse(hex2ascii(self.data))
         resolve(blockData)
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     })

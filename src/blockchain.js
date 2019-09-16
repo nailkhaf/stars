@@ -69,12 +69,12 @@ class Blockchain {
         block.time = new Date().getTime()
         block.previousBlockHash = self.height >= 0 ? self.chain[self.chain - 1].hash : null
         block.height = ++self.height
-        block.hash = SHA256(JSON.stringify(block))
+        block.hash = SHA256(JSON.stringify(block)).toString()
 
         self.chain.push(block)
 
         resolve(block)
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     })
@@ -90,7 +90,9 @@ class Blockchain {
    */
   requestMessageOwnershipVerification (address) {
     return new Promise(resolve => {
-      resolve("Success verified")
+      resolve(
+        `${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`
+      )
     })
   }
 
@@ -116,20 +118,27 @@ class Blockchain {
     return new Promise(async (resolve, reject) => {
       try {
         const time = parseInt(message.split(':')[1])
-        const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+        const currentTime = parseInt(
+          new Date()
+            .getTime()
+            .toString()
+            .slice(0, -3)
+        )
 
         if (currentTime - time < MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS) {
-          throw new Error('Elapsed time less than ${MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS} secs')
+          throw new Error(
+            `Elapsed time less than ${MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS} secs`
+          )
         }
 
         if (bitcoinMessage.verify(message, address, signature)) {
-          throw new Error('Message verification is failed')
+          throw new Error(`Message verification is failed`)
         }
 
-        const newBlock = new BlockClass.Block({data: star})
+        const newBlock = new BlockClass.Block({ address, star })
         await _addBlock(newBlock)
         resolve(newBlock)
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     })
@@ -142,8 +151,19 @@ class Blockchain {
    * @param {*} hash
    */
   getBlockByHash (hash) {
-    let self = this
-    return new Promise((resolve, reject) => {})
+    const self = this
+    return new Promise((resolve, reject) => {
+      try {
+        const block = self.chain.slice(1).find(block => block.hash === hash)
+        if (block) {
+          resolve(block)
+        } else {
+          resolve(null)
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   /**
@@ -152,7 +172,7 @@ class Blockchain {
    * @param {*} height
    */
   getBlockByHeight (height) {
-    let self = this
+    const self = this
     return new Promise((resolve, reject) => {
       try {
         let block = self.chain.find(block => block.height === height)
@@ -161,7 +181,7 @@ class Blockchain {
         } else {
           resolve(null)
         }
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     })
@@ -174,10 +194,18 @@ class Blockchain {
    * @param {*} address
    */
   getStarsByWalletAddress (address) {
-    let self = this
-    let stars = []
+    const self = this
     return new Promise((resolve, reject) => {
+      try {
+        const stars = self.chain
+          .slice(1)
+          .filter(block => block.getBData().address === address)
+          .map(block => block.star)
 
+        resolve(stars)
+      } catch (e) {
+        reject(e)
+      }
     })
   }
 
@@ -188,9 +216,28 @@ class Blockchain {
    * 2. Each Block should check the with the previousBlockHash
    */
   validateChain () {
-    let self = this
-    let errorLog = []
-    return new Promise(async (resolve, reject) => {})
+    const self = this
+    const errorLog = []
+    return new Promise(async (resolve, reject) => {
+      self.chain.reduce(async (previousBlock, block) => {
+        if (previousBlock != null) {
+          try {
+            const valid = await block.validate()
+            if (!valid) {
+              throw new Error(`Block is not valid. Block hash=${block.hash}`)
+            }
+            if (previousBlock.hash != block.previousBlockHash) {
+              throw new Error(`Block hash doesn't equal to previous block hash. Block hash=${block.hash}`)
+            }
+          } catch (e) {
+            errorLog.push(e)
+          }
+        }
+        return block
+      }, null)
+
+      resolve(errorLog)
+    })
   }
 }
 
