@@ -44,11 +44,15 @@ class Block {
       // Returning the Block is valid
 
       // FIXME why hash property is part of the block???
-      const expectedHash = self.hash
-      self.hash = null
-      const actualHash = SHA256(JSON.stringify(self))
-      self.hash = expectedHash
-      resolve(expectedHash == actualHash)
+      try {
+        const expectedHash = self.hash
+        self.hash = null
+        const actualHash = SHA256(JSON.stringify(self))
+        self.hash = expectedHash
+        resolve(expectedHash === actualHash)
+      } catch(e) {
+        reject(e)
+      }
     })
   }
 

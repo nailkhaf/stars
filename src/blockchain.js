@@ -12,6 +12,8 @@ const SHA256 = require('crypto-js/sha256')
 const BlockClass = require('./block.js')
 const bitcoinMessage = require('bitcoinjs-message')
 
+const MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS = 5 * 60 // secs
+
 class Blockchain {
   /**
    * Constructor of the class, you will need to setup your chain array and the height
@@ -61,8 +63,21 @@ class Blockchain {
    * that this method is a private method.
    */
   _addBlock (block) {
-    let self = this
-    return new Promise(async (resolve, reject) => {})
+    const self = this
+    return new Promise(async (resolve, reject) => {
+      try {
+        block.time = new Date().getTime()
+        block.previousBlockHash = self.height >= 0 ? self.chain[self.chain - 1].hash : null
+        block.height = ++self.height
+        block.hash = SHA256(JSON.stringify(block))
+
+        self.chain.push(block)
+
+        resolve(block)
+      } catch(e) {
+        reject(e)
+      }
+    })
   }
 
   /**
@@ -74,7 +89,9 @@ class Blockchain {
    * @param {*} address
    */
   requestMessageOwnershipVerification (address) {
-    return new Promise(resolve => {})
+    return new Promise(resolve => {
+      resolve("Success verified")
+    })
   }
 
   /**
@@ -95,8 +112,27 @@ class Blockchain {
    * @param {*} star
    */
   submitStar (address, message, signature, star) {
-    let self = this
-    return new Promise(async (resolve, reject) => {})
+    const self = this
+    return new Promise(async (resolve, reject) => {
+      try {
+        const time = parseInt(message.split(':')[1])
+        const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+
+        if (currentTime - time < MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS) {
+          throw new Error('Elapsed time less than ${MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS} secs')
+        }
+
+        if (bitcoinMessage.verify(message, address, signature)) {
+          throw new Error('Message verification is failed')
+        }
+
+        const newBlock = new BlockClass.Block({data: star})
+        await _addBlock(newBlock)
+        resolve(newBlock)
+      } catch(e) {
+        reject(e)
+      }
+    })
   }
 
   /**
@@ -118,11 +154,15 @@ class Blockchain {
   getBlockByHeight (height) {
     let self = this
     return new Promise((resolve, reject) => {
-      let block = self.chain.filter(p => p.height === height)[0]
-      if (block) {
-        resolve(block)
-      } else {
-        resolve(null)
+      try {
+        let block = self.chain.find(block => block.height === height)
+        if (block) {
+          resolve(block)
+        } else {
+          resolve(null)
+        }
+      } catch(e) {
+        reject(e)
       }
     })
   }
@@ -136,7 +176,9 @@ class Blockchain {
   getStarsByWalletAddress (address) {
     let self = this
     let stars = []
-    return new Promise((resolve, reject) => {})
+    return new Promise((resolve, reject) => {
+
+    })
   }
 
   /**
