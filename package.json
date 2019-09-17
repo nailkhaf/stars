@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon ./app.js",
     "format": "prettier-standard src/**/*.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Udacity - jose.morales@udacity.com",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "mocha": "^6.2.0",
     "nodemon": "^1.19.2",
     "prettier-standard": "^14.0.5"
   }

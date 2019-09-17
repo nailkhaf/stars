@@ -23,10 +23,19 @@ class Blockchain {
    * The methods in this class will always return a Promise to allow client applications or
    * other backends to call asynchronous functions.
    */
-  constructor () {
+  constructor ({
+    minElapsedTime = MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
+    currentTime = () =>
+      new Date()
+        .getTime()
+        .toString()
+        .slice(0, -3)
+  }) {
     this.chain = []
     this.height = -1
-    this.initializeChain()
+    this._initializeChain()
+    this.minElapsedTime = minElapsedTime
+    this.currentTime = currentTime
   }
 
   /**
@@ -34,7 +43,7 @@ class Blockchain {
    * You should use the `addBlock(block)` to create the Genesis Block
    * Passing as a data `{data: 'Genesis Block'}`
    */
-  async initializeChain () {
+  async _initializeChain () {
     if (this.height === -1) {
       let block = new BlockClass.Block({ data: 'Genesis Block' })
       await this._addBlock(block)
@@ -67,7 +76,8 @@ class Blockchain {
     return new Promise(async (resolve, reject) => {
       try {
         block.time = new Date().getTime()
-        block.previousBlockHash = self.height >= 0 ? self.chain[self.chain - 1].hash : null
+        block.previousBlockHash =
+          self.height >= 0 ? self.chain[self.chain.length - 1].hash : null
         block.height = ++self.height
         block.hash = SHA256(JSON.stringify(block)).toString()
 
@@ -89,10 +99,9 @@ class Blockchain {
    * @param {*} address
    */
   requestMessageOwnershipVerification (address) {
+    const self = this
     return new Promise(resolve => {
-      resolve(
-        `${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`
-      )
+      resolve(`${address}:${self.currentTime()}:starRegistry`)
     })
   }
 
@@ -118,25 +127,20 @@ class Blockchain {
     return new Promise(async (resolve, reject) => {
       try {
         const time = parseInt(message.split(':')[1])
-        const currentTime = parseInt(
-          new Date()
-            .getTime()
-            .toString()
-            .slice(0, -3)
-        )
+        const currentTime = parseInt(self.currentTime())
 
-        if (currentTime - time < MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS) {
+        if (currentTime - time < self.minElapsedTime) {
           throw new Error(
             `Elapsed time less than ${MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS} secs`
           )
         }
 
-        if (bitcoinMessage.verify(message, address, signature)) {
+        if (!bitcoinMessage.verify(message, address, signature)) {
           throw new Error(`Message verification is failed`)
         }
 
         const newBlock = new BlockClass.Block({ address, star })
-        await _addBlock(newBlock)
+        await self._addBlock(newBlock)
         resolve(newBlock)
       } catch (e) {
         reject(e)
@@ -199,8 +203,14 @@ class Blockchain {
       try {
         const stars = self.chain
           .slice(1)
-          .filter(block => block.getBData().address === address)
-          .map(block => block.star)
+          .reduce(async (promisedArray, block) => {
+            const array = await promisedArray
+            const data = await block.getBData()
+            if (data.address === address) {
+              array.push(data.star)
+            }
+            return array
+          }, [])
 
         resolve(stars)
       } catch (e) {
@@ -219,7 +229,7 @@ class Blockchain {
     const self = this
     const errorLog = []
     return new Promise(async (resolve, reject) => {
-      self.chain.reduce(async (previousBlock, block) => {
+      await self.chain.reduce(async (previousBlock, block) => {
         if (previousBlock != null) {
           try {
             const valid = await block.validate()
@@ -227,7 +237,11 @@ class Blockchain {
               throw new Error(`Block is not valid. Block hash=${block.hash}`)
             }
             if (previousBlock.hash != block.previousBlockHash) {
-              throw new Error(`Block hash doesn't equal to previous block hash. Block hash=${block.hash}`)
+              throw new Error(
+                `Block hash doesn't equal to previous block hash. Block hash=${
+                  block.hash
+                }`
+              )
             }
           } catch (e) {
             errorLog.push(e)
