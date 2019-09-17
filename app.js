@@ -38,9 +38,13 @@ class ApplicationServer {
     this.app.use(morgan('dev'))
     this.app.use(bodyParser.urlencoded({ extended: true }))
     this.app.use(bodyParser.json())
+    this.app.use(express.static("./web-app/public/"))
   }
 
   initControllers () {
+    this.app.get('/', async (req, res) => {
+      res.senFile('index.html')
+    })
     require('./BlockchainController.js')(this.app, this.blockchain)
   }
 

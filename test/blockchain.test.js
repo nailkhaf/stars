@@ -16,10 +16,10 @@ describe('Blockchain', () => {
       100,
       100 + 1 + MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS
     ])
-    const blockchain = new Blockchain({
-      minElapsedTime: MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
-      currentTime: () => currentTimeIterator.next().value
-    })
+    const blockchain = new Blockchain(
+      MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
+      () => currentTimeIterator.next().value
+    )
 
     it('requestMessageOwnershipVerification', async () => {
       const message = await blockchain.requestMessageOwnershipVerification(

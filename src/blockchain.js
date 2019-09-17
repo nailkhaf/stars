@@ -23,14 +23,14 @@ class Blockchain {
    * The methods in this class will always return a Promise to allow client applications or
    * other backends to call asynchronous functions.
    */
-  constructor ({
+  constructor (
     minElapsedTime = MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
     currentTime = () =>
       new Date()
         .getTime()
         .toString()
         .slice(0, -3)
-  }) {
+  ) {
     this.chain = []
     this.height = -1
     this._initializeChain()
