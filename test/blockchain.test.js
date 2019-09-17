@@ -11,35 +11,41 @@ const TEST_SIGNATURE =
 const TEST_STAR = 'the most bright star'
 
 describe('Blockchain', () => {
-  const currentTimeIterator = currentTime([
-    100,
-    100 + 1 + MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS
-  ])
-  const blockchain = new Blockchain({
-    minElapsedTime: MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
-    currentTime: () => currentTimeIterator.next().value
-  })
+  describe('add one star to blockchain', () => {
+    const currentTimeIterator = currentTime([
+      100,
+      100 + 1 + MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS
+    ])
+    const blockchain = new Blockchain({
+      minElapsedTime: MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
+      currentTime: () => currentTimeIterator.next().value
+    })
 
-  it('add one star to blockchain', async () => {
-    const message = await blockchain.requestMessageOwnershipVerification(
-      TEST_ADDRESS_WALLET
-    )
+    it('requestMessageOwnershipVerification', async () => {
+      const message = await blockchain.requestMessageOwnershipVerification(
+        TEST_ADDRESS_WALLET
+      )
 
-    assert.equal(
-      message,
-      TEST_EXPECTED_MESSAGE,
-      `requestMessageOwnershipVerification is failed`
-    )
+      assert.equal(
+        message,
+        TEST_EXPECTED_MESSAGE,
+        `requestMessageOwnershipVerification is failed`
+      )
+    })
 
-    const block = await blockchain.submitStar(
-      TEST_ADDRESS_WALLET,
-      TEST_EXPECTED_MESSAGE,
-      TEST_SIGNATURE,
-      TEST_STAR
-    )
+    let block
+
+    it('submitStar', async () => {
+      block = await blockchain.submitStar(
+        TEST_ADDRESS_WALLET,
+        TEST_EXPECTED_MESSAGE,
+        TEST_SIGNATURE,
+        TEST_STAR
+      )
+    })
 
     it('validateChain', async () => {
-      assert.equal(await blockchain.validateChain(), [])
+      assert.deepEqual(await blockchain.validateChain(), [])
     })
 
     it('getStarsByWalletAddress', async () => {
@@ -62,7 +68,6 @@ describe('Blockchain', () => {
     })
   })
 })
-
 
 function delay (millis) {
   return new Promise((resolve, reject) => {

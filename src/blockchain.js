@@ -179,7 +179,7 @@ class Blockchain {
     const self = this
     return new Promise((resolve, reject) => {
       try {
-        let block = self.chain.find(block => block.height === height)
+        const block = self.chain.find(block => block.height === height)
         if (block) {
           resolve(block)
         } else {
@@ -229,14 +229,15 @@ class Blockchain {
     const self = this
     const errorLog = []
     return new Promise(async (resolve, reject) => {
-      await self.chain.reduce(async (previousBlock, block) => {
-        if (previousBlock != null) {
+      await self.chain.reduce(async (previousBlockPromise, block) => {
+        if (previousBlockPromise != null) {
           try {
+            const previousBlock = await previousBlockPromise
             const valid = await block.validate()
             if (!valid) {
               throw new Error(`Block is not valid. Block hash=${block.hash}`)
             }
-            if (previousBlock.hash != block.previousBlockHash) {
+            if (previousBlock.hash !== block.previousBlockHash) {
               throw new Error(
                 `Block hash doesn't equal to previous block hash. Block hash=${
                   block.hash
