@@ -2,6 +2,7 @@
 	import Address from "./Address.svelte"
 	import NewStarBlock from "./NewStarBlock.svelte"
 	import MyStars from "./MyStars.svelte"
+	import AllBlocks from "./AllBlocks.svelte"
 
 	let address = null
 
@@ -24,8 +25,6 @@
 
 {#if address}
 	<NewStarBlock address={address} on:newStarAdded={reset}/>
-{/if}
-
-{#if address}
 	<MyStars address={address}/>
+	<AllBlocks/>
 {/if}

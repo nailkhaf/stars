@@ -1,7 +1,7 @@
 <script>
 	export let address;
 
-	import { onMount} from 'svelte';
+	import { onMount } from 'svelte';
 
 	let stars = [];
 

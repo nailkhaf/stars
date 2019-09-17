@@ -33,7 +33,7 @@
 
 <form on:submit={onSubmit}>
 	<h4>Please, sign message:</h4>
-	<Timer startTimer={message.split(":")[1]} duration={5 * 60} on:timerFinish={onTimerFinish}/>
+	<Timer startTimer={message.split(":")[1]} duration={0.5 * 60} on:timerFinish={onTimerFinish}/>
 	<p>address: {address}</p>
 	<p>message: {message}</p>
 

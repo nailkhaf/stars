@@ -12,7 +12,7 @@ const SHA256 = require('crypto-js/sha256')
 const BlockClass = require('./block.js')
 const bitcoinMessage = require('bitcoinjs-message')
 
-const MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS = 5 * 60 // secs
+const MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS = 0.5 * 60 // secs
 
 class Blockchain {
   /**
