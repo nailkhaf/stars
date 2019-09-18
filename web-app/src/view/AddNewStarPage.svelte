@@ -22,9 +22,11 @@
 
 <style>
 	.container {
-		width: 360px;
-		background-color: #fff;
-		padding: 20px;
+		max-width: 500px;
+		min-width: 340px;
+		width: 100%;	
+		background-color: var(--white);
+		padding: 30px;
 	}
 </style>
 
@@ -35,6 +37,7 @@
 
 	{#if address}
 	<MyStars address={address}/>
+	<NewStarBlock  address="{address}"/>
 	<AllBlocks/>
 	{/if}
 

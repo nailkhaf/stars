@@ -36,12 +36,13 @@
 <style>
 	input {
 		height: 36px;
-		border: 1px solid;
+		width:100%;
+		border: 1px solid var(--border);
 		box-sizing: border-box;
 		border-radius: 4px;
 	}
 
-	input:focus {
+	input:hover, input:focus {
 		border: 1px solid #5275FF;
 		outline: none;
 	}

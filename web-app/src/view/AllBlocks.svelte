@@ -21,9 +21,10 @@
 
 </script>
 
-<h3>All Blocks:</h3>
-
-<button on:click={onUpdate}>update</button>
+<div class='row'>
+	<h3>All Blocks</h3>
+	<button on:click={onUpdate} class='update'>update</button>
+</div>
 
 <table>
 	<tr>
@@ -34,10 +35,49 @@
 	</tr>
 	{#each blocks as block, i}
 	<tr>
-	    <th>{block.height}</th>
-	    <th>{block.hash.slice(0, 6)}</th>
-	    <th>{(block.previousBlockHash ? block.previousBlockHash : "null").slice(0, 6)}</th>
-	    <th>{block.time}</th>
+	    <td>{block.height}</td>
+	    <td>{block.hash.slice(0, 6)}</td>
+	    <td>{(block.previousBlockHash ? block.previousBlockHash : "null").slice(0, 6)}</td>
+	    <td>{block.time}</td>
 	</tr>
 	{/each}
 </table>
+
+<style>
+	.update {
+		width: 16px;
+		height: 16px;
+		background-image: url("/Refresh.svg");
+		border: none;
+		background-repeat: no-repeat;
+		margin:0 0 12px 16px;
+		font-size:0;
+	}
+
+	table {
+		width: 100%;
+	}
+
+	tr {
+		border-radius: 4px;
+	}
+
+	tr:hover {
+		background-color: var(--light-background);
+	}
+
+	td {
+		color: var(--black);
+	}
+
+	th {
+		background-color: var(--light-background);
+		color: #9FAAC4;
+		font-size: 12px;
+		line-height: 18px;
+		padding:7px;
+	}
+
+
+
+</style>

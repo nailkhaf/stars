@@ -16,4 +16,17 @@
 	}
 </script>
 
-<button on:click={onRequest}>Request message</button>
+<button on:click={onRequest}>Add a new star</button>
+
+<style>
+	button {
+		width: 100%;
+		text-align: center;
+		background: var(--violet);
+		padding: 9px;
+		color: var(--white);
+		border: none !important;
+		border-radius: 4px;
+		margin-bottom: 30px;
+	}
+</style>

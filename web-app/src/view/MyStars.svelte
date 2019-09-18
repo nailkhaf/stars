@@ -20,12 +20,10 @@
 
 <div class="container">
 
-	<h3>My Stars</h3>
-	<button on:click={updateStars}></button>
-
-	{#if stars.length === 0}
-		<p>Yet empty</p>
-	{/if}
+	<div class='row'>
+		<h3>My Stars</h3>
+		<button class="update" on:click={updateStars}></button>
+	</div>
 	
 	{#if stars.length !== 0}
 		<ul>
@@ -41,21 +39,23 @@
 
 <style>
 
-	button {
+	.row {
+		display: flex;
+		align-items: center;
+	}
+
+	p {
+		margin: 0 0 16px;
+	}
+
+	.update {
 		width: 16px;
 		height: 16px;
 		background-image: url("/Refresh.svg");
-		background-color: #00000000;
 		border: none;
 		background-repeat: no-repeat;
-		padding-top: 16px;
-		margin-left: 16px;
+		margin:0 0 12px 16px;
 	}
-
-	h3 {
-		display: inline;
-		margin-top: px;
-	}	
 
 	.container {
 		margin-top: 16px;

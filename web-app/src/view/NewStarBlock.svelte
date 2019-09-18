@@ -23,13 +23,8 @@
 
 </script>
 
-<h3>Add New Star</h3>
-
-{#if !message}
 	<RequestMessage address={address} on:receiveMessage={onReceiveMessage}/>
-{/if}
 
 {#if message}
-	<button on:click={reset}>reset</button>
-	<SignMessage message={message} address={address} on:starAdded={onStarAdded}/>
+	<SignMessage message={message} address={address} on:starAdded={onStarAdded} on:reset={reset} />
 {/if}
