@@ -60,4 +60,14 @@
 	.container {
 		margin-top: 16px;
 	}
+
+	ul {
+		margin: 0;
+	}
+
+	li {
+		list-style: none;
+		margin-bottom: 8px;
+	}
+
 </style>

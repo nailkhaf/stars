@@ -32,6 +32,17 @@
 		}
 	}
 
+	function formatTime(timer) {
+		const date = new Date(timer * 1000)
+		return `${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
+	}
+
 </script>
 
-<p>left time: <span>{timer}</span> sec</p>
+<p class="blue-text"><span>{formatTime(timer)}</span></p>
+
+<style>
+	.blue-text {
+		color: var(--violet);
+	}
+</style>

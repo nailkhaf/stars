@@ -26,6 +26,7 @@
 		min-width: 340px;
 		width: 100%;	
 		background-color: var(--white);
+		border-radius: 6px;
 		padding: 30px;
 	}
 </style>

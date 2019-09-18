@@ -20,6 +20,7 @@
 
 <style>
 	button {
+		margin-top: 16px;
 		width: 100%;
 		text-align: center;
 		background: var(--violet);

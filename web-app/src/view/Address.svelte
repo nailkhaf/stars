@@ -13,6 +13,8 @@
 
 	function onEdit() {
 		state = 'edit'
+		address = null
+		dispatch('addressChange', {address})
 	}
 
 </script>
@@ -68,7 +70,7 @@
 	.button-edit {
 		margin-left: 10px;
 		background-repeat: no-repeat;
-		background-image: url(/Edit.svg);
+		background-image: url(/Remove.svg);
 		background-position: center center;
 	}
 
