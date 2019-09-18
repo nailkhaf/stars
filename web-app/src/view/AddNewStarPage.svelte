@@ -20,11 +20,22 @@
 
 </script>
 
-<h3>My wallet address</h3>
-<Address on:addressChange={onAddressChange}/>
+<style>
+	.container {
+		width: 360px;
+		background-color: #fff;
+		padding: 20px;
+	}
+</style>
 
-{#if address}
-	<NewStarBlock address={address} on:newStarAdded={reset}/>
+<div class="container">
+
+	<h3>My wallet address</h3>
+	<Address on:addressChange={onAddressChange}/>
+
+	{#if address}
 	<MyStars address={address}/>
 	<AllBlocks/>
-{/if}
+	{/if}
+
+</div>
