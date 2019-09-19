@@ -25,16 +25,23 @@
 		<button class="update" on:click={updateStars}></button>
 	</div>
 	
-	{#if stars.length !== 0}
-		<ul>
-			{#each stars as star, i}
-				<li>
-					⭐️  {star}
-				</li>
-			{/each}
-		</ul>
-	{/if}
-	
+	<table>
+	<tr>
+	    <th></th>
+	    <th>dec</th>
+	    <th>ra</th>
+	    <th>story</th>
+	</tr>
+	{#each stars as star, i}
+	<tr>
+			<td>⭐️</td>
+	    <td>{star.dec}</td>
+	    <td>{star.ra}</td>
+	    <td>{star.story}</td>
+	</tr>
+	{/each}
+</table>
+
 </div>
 
 <style>
@@ -68,6 +75,31 @@
 	li {
 		list-style: none;
 		margin-bottom: 8px;
+	}
+
+		table {
+		width: 100%;
+	}
+
+	tr {
+		border-radius: 4px;
+	}
+
+	tr:hover {
+		background-color: var(--light-background);
+	}
+
+	td {
+		color: var(--black);
+		text-align: center;
+	}
+
+	th {
+		background-color: var(--light-background);
+		color: #9FAAC4;
+		font-size: 12px;
+		line-height: 18px;
+		padding:7px;
 	}
 
 </style>

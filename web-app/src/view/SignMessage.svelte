@@ -9,7 +9,11 @@
 
 	let timerFinish = false
 	let signature = ''
-	let star = ''
+	let star = {
+		dec: "",
+		ra: "",
+		story: "",
+	}
 	let state = 'edit'
 
 	function onTimerFinish() {
@@ -51,15 +55,26 @@
 			<p class="beautiful-font">Message: <span class="grey-text">{message}</span></p>
 
 			<label class="beautiful-font" for="signature-input">Signature:</label>
-			<input id="signature-input" bind:value={signature} disabled={state !== 'edit'}/>
+			<input id="signature-input" class="signature" bind:value={signature} disabled={state !== 'edit'}/>
 
-			<label class="beautiful-font" for="edit-input">Star data:</label>
-			<input id="edit-input" bind:value={star} disabled={state !== 'edit'}/>
+			<p class="beautiful-font">Star data:</p>
+
+			<label class="beautiful-font">dec:
+				<input class="star-field" bind:value={star.dec} disabled={state !== 'edit'}/>
+			</label>
+
+			<label class="beautiful-font">ra:
+				<input class="star-field" bind:value={star.ra} disabled={state !== 'edit'}/>
+			</label>
+
+			<label class="beautiful-font">story:
+				<input class="star-field" bind:value={star.story} disabled={state !== 'edit'}/>
+			</label>
 
 			<div class="timer-add">
 			<Timer startTimer={message.split(":")[1]} duration={5 * 60} on:timerFinish={onTimerFinish}/>
 
-			<button class="add-button" type="submit" disabled={!timerFinish || signature === "" || star === "" || state !== 'edit'}>
+			<button class="add-button" type="submit" disabled={!timerFinish || signature === "" || star === {} || state !== 'edit'}>
 				Add
 			</button>
 
@@ -128,13 +143,17 @@
 		margin: 0 0 16px 0;
 	}
 
-	label {
+	.signature {
 		display: block;
+		width: 100%;
+	}
+
+	.star-field {
+		width: 80%;
 	}
 
 	input {
 		margin-top: 8px;
-		width: 100%;
 		height: 32px;
 		border: 1px solid var(--border);
 		color: var(--grey);
