@@ -2,19 +2,38 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-	let address = null
+	let address = localStorage.getItem('address')
 	let state = 'edit'
+
+	if (address === 'null') {
+		address = null
+	}
+
+	if (address) {
+		state = 'submit'
+		setTimeout(() => dispatch('addressChange', {address}), 100)
+	}
 
 	function onSubmit(event) {
 		event.preventDefault()
-		dispatch('addressChange', {address})
 		state = 'submit'
+		saveAddressToLocalStorage()
+		dispatch('addressChange', {address})
 	}
 
 	function onEdit() {
 		state = 'edit'
 		address = null
+		clearAddressFromLocalStorage()
 		dispatch('addressChange', {address})
+	}
+
+	function saveAddressToLocalStorage() {
+		localStorage.setItem('address', address)
+	}
+
+	function clearAddressFromLocalStorage() {
+		localStorage.setItem('address', null)	
 	}
 
 </script>
