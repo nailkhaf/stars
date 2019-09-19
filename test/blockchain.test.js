@@ -8,7 +8,11 @@ const TEST_EXPECTED_MESSAGE =
   '1F3C1bbV3RJgjeoUzR5h1C9jZmRw3chwCq:100:starRegistry'
 const TEST_SIGNATURE =
   'IH5v2giD+/y0bmQuW4VmfVvj5qTyKQlYxlUfqARtiFaGfT7weHcEU+mPeyRDa72YwA64XwlACR2GT3NWPZeZs8c='
-const TEST_STAR = 'the most bright star'
+const TEST_STAR = {
+  dec: '68 52 56.9',
+  ra: '16h 29m 1.0s',
+  story: 'Testing the story 4'
+}
 
 describe('Blockchain', () => {
   describe('add one star to blockchain', () => {
@@ -77,7 +81,7 @@ function delay (millis) {
   })
 }
 
-function * currentTime (values) {
+function* currentTime (values) {
   for (value of values) {
     yield value
   }
