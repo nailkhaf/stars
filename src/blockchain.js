@@ -139,7 +139,7 @@ class Blockchain {
           throw new Error(`Message verification is failed`)
         }
 
-        const newBlock = new BlockClass.Block({ address, star })
+        const newBlock = new BlockClass.Block({ message, signature, star })
         await self._addBlock(newBlock)
         resolve(newBlock)
       } catch (e) {
@@ -206,7 +206,7 @@ class Blockchain {
           .reduce(async (promisedArray, block) => {
             const array = await promisedArray
             const data = await block.getBData()
-            if (data.address === address) {
+            if (data.message.split(":")[0] === address) {
               array.push(data.star)
             }
             return array
