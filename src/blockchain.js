@@ -129,10 +129,8 @@ class Blockchain {
         const time = parseInt(message.split(':')[1])
         const currentTime = parseInt(self.currentTime())
 
-        if (currentTime - time < self.minElapsedTime) {
-          throw new Error(
-            `Elapsed time less than ${MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS} secs`
-          )
+        if (currentTime - time > self.minElapsedTime) {
+          throw new Error(`Message expired, elapsed time more than ${self.minElapsedTime} secs`)
         }
 
         if (!bitcoinMessage.verify(message, address, signature)) {
@@ -207,7 +205,10 @@ class Blockchain {
             const array = await promisedArray
             const data = await block.getBData()
             if (data.message.split(":")[0] === address) {
-              array.push(data.star)
+              array.push({
+                owner: address,
+                star: data.star,
+              })
             }
             return array
           }, [])

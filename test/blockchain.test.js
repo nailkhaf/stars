@@ -2,7 +2,7 @@ const { Blockchain } = require('../src/blockchain.js')
 
 var assert = require('assert')
 
-const MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS = 1 * 60 // secs
+const MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS = 5 * 60 // secs
 const TEST_ADDRESS_WALLET = '1F3C1bbV3RJgjeoUzR5h1C9jZmRw3chwCq'
 const TEST_EXPECTED_MESSAGE =
   '1F3C1bbV3RJgjeoUzR5h1C9jZmRw3chwCq:100:starRegistry'
@@ -18,7 +18,7 @@ describe('Blockchain', () => {
   describe('add one star to blockchain', () => {
     const currentTimeIterator = currentTime([
       100,
-      100 + 1 + MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS
+      100 - 1 + MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS
     ])
     const blockchain = new Blockchain(
       MIN_ELAPSED_TIME_BETWEEN_SUBMIT_STARS,
@@ -56,7 +56,10 @@ describe('Blockchain', () => {
       const stars = await blockchain.getStarsByWalletAddress(
         TEST_ADDRESS_WALLET
       )
-      assert.deepEqual([TEST_STAR], stars)
+      assert.deepEqual([{
+        owner: TEST_ADDRESS_WALLET,
+        star: TEST_STAR,
+      }], stars)
     })
 
     it('getChainHeight', async () => {

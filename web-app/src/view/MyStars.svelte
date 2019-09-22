@@ -12,7 +12,7 @@
 	function updateStars() {
 		fetch(`/blocks/${address}`, {method: 'GET'})
 			.then(response => response.json())
-			.then(data => stars = data)
+			.then(data => stars = data.map(item => item.star))
 			.catch(error => console.error(error))
 	}
 

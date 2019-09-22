@@ -74,7 +74,7 @@
 			<div class="timer-add">
 			<Timer startTimer={message.split(":")[1]} duration={5 * 60} on:timerFinish={onTimerFinish}/>
 
-			<button class="add-button" type="submit" disabled={!timerFinish || signature === "" || star === {} || state !== 'edit'}>
+			<button class="add-button" type="submit" disabled={timerFinish || signature === "" || star === {} || state !== 'edit'}>
 				Add
 			</button>
 
