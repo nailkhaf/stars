@@ -11,7 +11,7 @@ He is an astronomy fan and because of that he spends most of his free time searc
 
 ### Technical details:
 
-To use this app you need bitcoin wallet (Electrum or Bitcoin Core for example) for signing messages. To add new star you should sign message from server and send signature. Message is like `<WALLET_ADRESS>:<TIME>:starRegistry`. You need to fill signature, star's details and wait 5 minutes. After you can add star star to blockchain.
+To use this app you need bitcoin wallet (Electrum or Bitcoin Core for example) for signing messages. To add new star you should sign message from server and send signature. Message is like `<WALLET_ADRESS>:<TIME>:starRegistry`. You need to fill signature, star's details. After you can add star star to blockchain.
 
 ### To launch:
 
