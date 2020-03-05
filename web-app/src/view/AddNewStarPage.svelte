@@ -22,9 +22,9 @@
 
 <style>
 	.container {
-		max-width: 500px;
+		max-width: 600px;
 		min-width: 340px;
-		width: 100%;	
+		width: 100%;
 		background-color: var(--white);
 		border-radius: 6px;
 		padding: 30px;

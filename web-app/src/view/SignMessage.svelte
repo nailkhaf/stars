@@ -99,7 +99,7 @@
 	}
 
 	.modal {
-		max-width: 500px;
+		max-width: 600px;
 		min-width: 340px;
 		width: 100%;
 		border-radius: 8px;
